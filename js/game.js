@@ -1,47 +1,75 @@
+const questions = [
+  {
+    q:"x²-5x+6=0 の解は？",
+    choices:["2,3","1,6","-2,-3","解なし"],
+    answer:0
+  },
+  {
+    q:"√144 = ?",
+    choices:["10","11","12","13"],
+    answer:2
+  },
+  {
+    q:"3x+5=20",
+    choices:["5","4","3","2"],
+    answer:0
+  }
+];
+
 let hp = 100;
+let maxHp = 100;
 let level = 1;
-let questionNumber = 1;
+let current = 0;
 
-document.body.innerHTML = `
-<h1>⚔️ 数学クエスト ⚔️</h1>
+function showQuestion(){
 
-<p>レベル: <span id="level">${level}</span></p>
-<p>HP: <span id="hp">${hp}</span></p>
+  const q = questions[current];
 
-<h2>問題1</h2>
+  document.body.innerHTML = `
+    <h1>⚔️ 数学クエスト ⚔️</h1>
 
-<p> x² - 5x + 6 = 0 の解は？ </p>
+    <p>Lv:${level}</p>
+    <p>HP:${hp}/${maxHp}</p>
 
-<button onclick="correct()">2,3</button>
-<button onclick="wrong()">1,6</button>
-<button onclick="wrong()">-2,-3</button>
-<button onclick="wrong()">解なし</button>
+    <h2>${q.q}</h2>
 
-<p id="message"></p>
-`;
+    ${q.choices.map((c,i)=>
+      `<button onclick="answer(${i})">${c}</button>`
+    ).join("<br><br>")}
 
-function correct() {
-
-  hp = Math.min(100, hp + 10);
-
-  document.getElementById("hp").textContent = hp;
-
-  document.getElementById("message").textContent =
-  "正解！HP+10";
-
+    <p>${current+1} / ${questions.length}</p>
+  `;
 }
 
-function wrong() {
+function answer(index){
 
-  hp -= 10;
-
-  document.getElementById("hp").textContent = hp;
-
-  document.getElementById("message").textContent =
-  "不正解！HP-10";
+  if(index === questions[current].answer){
+    hp = Math.min(maxHp,hp+10);
+    alert("正解！");
+  }else{
+    hp -= 10;
+    alert("不正解！");
+  }
 
   if(hp <= 0){
     alert("ゲームオーバー");
+    return;
   }
 
+  current++;
+
+  if(current >= questions.length){
+
+    level++;
+    maxHp += 20;
+    hp = maxHp;
+
+    alert("レベルアップ！");
+
+    current = 0;
+  }
+
+  showQuestion();
 }
+
+showQuestion();
