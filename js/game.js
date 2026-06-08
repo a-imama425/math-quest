@@ -72,4 +72,6 @@ function answer(index){
   showQuestion();
 }
 
+questions.sort(() => Math.random() - 0.5);
+
 showQuestion();
